@@ -42,9 +42,11 @@ const Navigation = () => {
                 <Button variant="outline" size="sm" onClick={signOut}>
                   Sign Out
                 </Button>
-                <Button size="sm" className="bg-primary hover:bg-primary-light">
-                  Start Campaign
-                </Button>
+                <Link to="/create-campaign">
+                  <Button size="sm" className="bg-primary hover:bg-primary-light">
+                    Start Campaign
+                  </Button>
+                </Link>
               </>
             ) : (
               <>
@@ -112,9 +114,11 @@ const Navigation = () => {
                     <Button variant="outline" size="sm" onClick={signOut}>
                       Sign Out
                     </Button>
-                    <Button size="sm" className="bg-primary hover:bg-primary-light">
-                      Start Campaign
-                    </Button>
+                    <Link to="/create-campaign">
+                      <Button size="sm" className="bg-primary hover:bg-primary-light w-full">
+                        Start Campaign
+                      </Button>
+                    </Link>
                   </>
                 ) : (
                   <>

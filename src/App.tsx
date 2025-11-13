@@ -4,10 +4,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./hooks/useAuth";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import CampaignDetail from "./pages/CampaignDetail";
 import Auth from "./pages/Auth";
+import CreateCampaign from "./pages/CreateCampaign";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import NotFound from "./pages/NotFound";
@@ -26,7 +28,22 @@ const App = () => (
             <Route path="/discover" element={<Discover />} />
             <Route path="/campaign/:id" element={<CampaignDetail />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/admin" element={<AdminLayout />}>
+            <Route 
+              path="/create-campaign" 
+              element={
+                <ProtectedRoute>
+                  <CreateCampaign />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin" 
+              element={
+                <ProtectedRoute requireAdmin>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route index element={<AdminDashboard />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
