@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Heart, Menu, X } from "lucide-react";
+import { Heart, Menu, X, Shield } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut, isAdmin } = useAuth();
 
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -29,12 +31,35 @@ const Navigation = () => {
             <Link to="/about" className="text-foreground hover:text-primary transition-colors">
               About
             </Link>
-            <Button variant="outline" size="sm">
-              Sign In
-            </Button>
-            <Button size="sm" className="bg-primary hover:bg-primary-light">
-              Start Campaign
-            </Button>
+            {isAdmin && (
+              <Link to="/admin" className="text-foreground hover:text-primary transition-colors flex items-center gap-1">
+                <Shield className="w-4 h-4" />
+                Admin
+              </Link>
+            )}
+            {user ? (
+              <>
+                <Button variant="outline" size="sm" onClick={signOut}>
+                  Sign Out
+                </Button>
+                <Button size="sm" className="bg-primary hover:bg-primary-light">
+                  Start Campaign
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/auth">
+                  <Button variant="outline" size="sm">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link to="/auth">
+                  <Button size="sm" className="bg-primary hover:bg-primary-light">
+                    Start Campaign
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -71,13 +96,40 @@ const Navigation = () => {
               >
                 About
               </Link>
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="text-foreground hover:text-primary transition-colors px-2 py-1 flex items-center gap-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Shield className="w-4 h-4" />
+                  Admin Panel
+                </Link>
+              )}
               <div className="flex flex-col gap-2 pt-2">
-                <Button variant="outline" size="sm">
-                  Sign In
-                </Button>
-                <Button size="sm" className="bg-primary hover:bg-primary-light">
-                  Start Campaign
-                </Button>
+                {user ? (
+                  <>
+                    <Button variant="outline" size="sm" onClick={signOut}>
+                      Sign Out
+                    </Button>
+                    <Button size="sm" className="bg-primary hover:bg-primary-light">
+                      Start Campaign
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/auth">
+                      <Button variant="outline" size="sm" className="w-full">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link to="/auth">
+                      <Button size="sm" className="bg-primary hover:bg-primary-light w-full">
+                        Start Campaign
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
