@@ -13,6 +13,7 @@ import CreateCampaign from "./pages/CreateCampaign";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminCampaigns from "./pages/admin/Campaigns";
+import AdminWithdrawals from "./pages/admin/Withdrawals";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App = () => (
             >
               <Route index element={<AdminDashboard />} />
               <Route path="campaigns" element={<AdminCampaigns />} />
+              <Route path="withdrawals" element={<AdminWithdrawals />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

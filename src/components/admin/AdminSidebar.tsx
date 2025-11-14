@@ -1,4 +1,4 @@
-import { LayoutDashboard, FileText, Users, DollarSign, Flag, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, Users, DollarSign, Flag, Settings, LogOut, Wallet } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 const menuItems = [
   { title: 'Dashboard', url: '/admin', icon: LayoutDashboard, end: true },
   { title: 'Campaigns', url: '/admin/campaigns', icon: FileText },
+  { title: 'Withdrawals', url: '/admin/withdrawals', icon: Wallet },
   { title: 'Users', url: '/admin/users', icon: Users },
   { title: 'Transactions', url: '/admin/transactions', icon: DollarSign },
   { title: 'Reports', url: '/admin/reports', icon: Flag },
