@@ -1,11 +1,12 @@
 import Navigation from "@/components/Navigation";
 import ProverbBanner from "@/components/ProverbBanner";
+import DonateDialog from "@/components/DonateDialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Heart, Share2, ShieldCheck, Clock, Users, MapPin, MessageCircle } from "lucide-react";
+import { Share2, ShieldCheck, Clock, Users, MapPin, MessageCircle } from "lucide-react";
 import { useParams } from "react-router-dom";
 import educationImage from "@/assets/campaign-education.jpg";
 
@@ -185,10 +186,10 @@ Your support will help me complete my education and begin my journey of serving 
               </div>
 
               {/* Donate Button */}
-              <Button className="w-full h-12 text-lg bg-primary hover:bg-primary-light">
-                <Heart className="w-5 h-5 mr-2" />
-                Donate Now
-              </Button>
+              <DonateDialog 
+                campaignId={id || ""} 
+                campaignTitle={campaign.title} 
+              />
 
               {/* Share Button */}
               <Button variant="outline" className="w-full h-12">
