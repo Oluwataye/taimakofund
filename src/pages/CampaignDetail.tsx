@@ -1,6 +1,10 @@
 import Navigation from "@/components/Navigation";
 import ProverbBanner from "@/components/ProverbBanner";
 import DonateDialog from "@/components/DonateDialog";
+import { CampaignUpdatesList } from "@/components/CampaignUpdatesList";
+import { CampaignUpdateForm } from "@/components/CampaignUpdateForm";
+import { WithdrawalRequestDialog } from "@/components/WithdrawalRequestDialog";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -9,9 +13,12 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Share2, ShieldCheck, Clock, Users, MapPin, MessageCircle } from "lucide-react";
 import { useParams } from "react-router-dom";
 import educationImage from "@/assets/campaign-education.jpg";
+import { useState } from "react";
 
 const CampaignDetail = () => {
   const { id } = useParams();
+  const { user } = useAuth();
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // Mock data - will be replaced with real data
   const campaign = {
@@ -155,6 +162,27 @@ Your support will help me complete my education and begin my journey of serving 
                 ))}
               </div>
             </Card>
+
+            {/* Creator Controls - only show if user is the campaign creator */}
+            {user && campaign.organizer === user?.email && (
+              <Card className="p-6">
+                <h2 className="text-2xl font-bold text-foreground mb-4">Campaign Management</h2>
+                <div className="flex flex-wrap gap-3">
+                  <CampaignUpdateForm 
+                    campaignId={id || ""} 
+                    onUpdateCreated={() => setRefreshKey(prev => prev + 1)}
+                  />
+                  <WithdrawalRequestDialog 
+                    campaignId={id || ""}
+                    campaignTitle={campaign.title}
+                    availableAmount={campaign.raised}
+                  />
+                </div>
+              </Card>
+            )}
+
+            {/* Campaign Updates */}
+            <CampaignUpdatesList key={refreshKey} campaignId={id || ""} />
           </div>
 
           {/* Sidebar */}
