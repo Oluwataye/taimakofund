@@ -8,6 +8,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import CampaignDetail from "./pages/CampaignDetail";
+import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 import CreateCampaign from "./pages/CreateCampaign";
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -30,6 +31,14 @@ const App = () => (
             <Route path="/discover" element={<Discover />} />
             <Route path="/campaign/:id" element={<CampaignDetail />} />
             <Route path="/auth" element={<Auth />} />
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
             <Route 
               path="/create-campaign" 
               element={

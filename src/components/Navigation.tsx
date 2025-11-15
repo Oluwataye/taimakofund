@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Heart, Menu, X, Shield } from "lucide-react";
+import { NavLink } from "./NavLink";
+import { NotificationBell } from "./NotificationBell";
+import { Button } from "./ui/button";
+import { Heart, Menu, X, Shield, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -39,6 +41,11 @@ const Navigation = () => {
             )}
             {user ? (
               <>
+                <NotificationBell />
+                <Link to="/dashboard" className="text-foreground hover:text-primary transition-colors flex items-center gap-1">
+                  <LayoutDashboard className="w-4 h-4" />
+                  Dashboard
+                </Link>
                 <Button variant="outline" size="sm" onClick={signOut}>
                   Sign Out
                 </Button>
@@ -111,6 +118,12 @@ const Navigation = () => {
               <div className="flex flex-col gap-2 pt-2">
                 {user ? (
                   <>
+                    <Link to="/dashboard">
+                      <Button variant="outline" size="sm" className="w-full justify-start gap-2">
+                        <LayoutDashboard className="w-4 h-4" />
+                        Dashboard
+                      </Button>
+                    </Link>
                     <Button variant="outline" size="sm" onClick={signOut}>
                       Sign Out
                     </Button>
