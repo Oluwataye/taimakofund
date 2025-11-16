@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import CampaignDetail from "./pages/CampaignDetail";
 import Dashboard from "./pages/Dashboard";
+import Analytics from "./pages/Analytics";
 import Auth from "./pages/Auth";
 import CreateCampaign from "./pages/CreateCampaign";
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -36,6 +37,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/analytics" 
+              element={
+                <ProtectedRoute>
+                  <Analytics />
                 </ProtectedRoute>
               } 
             />

@@ -4,6 +4,7 @@ import DonateDialog from "@/components/DonateDialog";
 import { CampaignUpdatesList } from "@/components/CampaignUpdatesList";
 import { CampaignUpdateForm } from "@/components/CampaignUpdateForm";
 import { WithdrawalRequestDialog } from "@/components/WithdrawalRequestDialog";
+import { SocialShare } from "@/components/SocialShare";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -219,11 +220,14 @@ Your support will help me complete my education and begin my journey of serving 
                 campaignTitle={campaign.title} 
               />
 
-              {/* Share Button */}
-              <Button variant="outline" className="w-full h-12">
-                <Share2 className="w-5 h-5 mr-2" />
-                Share Campaign
-              </Button>
+              {/* Share Section */}
+              <div className="pt-4 border-t">
+                <SocialShare 
+                  campaignId={id || "1"}
+                  title={campaign.title}
+                  description={campaign.description}
+                />
+              </div>
 
               {/* Trust Info */}
               <div className="pt-4 border-t space-y-3 text-sm">
