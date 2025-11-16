@@ -46,6 +46,9 @@ const Navigation = () => {
                   <LayoutDashboard className="w-4 h-4" />
                   Dashboard
                 </Link>
+                <Link to="/analytics" className="text-foreground hover:text-primary transition-colors">
+                  Analytics
+                </Link>
                 <Button variant="outline" size="sm" onClick={signOut}>
                   Sign Out
                 </Button>
