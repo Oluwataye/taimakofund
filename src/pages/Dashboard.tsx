@@ -107,10 +107,16 @@ export default function Dashboard() {
             <h1 className="text-3xl font-bold">My Dashboard</h1>
             <p className="text-muted-foreground">Manage your campaigns and track donations</p>
           </div>
-          <Button onClick={() => navigate('/create-campaign')} className="gap-2">
-            <Plus className="w-4 h-4" />
-            Create Campaign
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={() => navigate('/analytics')} variant="outline" className="gap-2">
+              <TrendingUp className="w-4 h-4" />
+              View Analytics
+            </Button>
+            <Button onClick={() => navigate('/create-campaign')} className="gap-2">
+              <Plus className="w-4 h-4" />
+              Create Campaign
+            </Button>
+          </div>
         </div>
 
         {/* Stats Grid */}
