@@ -23,9 +23,11 @@ import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
 import CreateCampaign from "./pages/CreateCampaign";
+import Profile from "./pages/user/Profile";
 
 // Moderator Pages
 import ModeratorDashboard from "./pages/moderator/Dashboard";
+import ModeratorReports from "./pages/moderator/Reports";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -68,12 +70,13 @@ const App = () => (
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="analytics" element={<Analytics />} />
               <Route path="create-campaign" element={<CreateCampaign />} />
+              <Route path="profile" element={<Profile />} />
             </Route>
 
             {/* Moderator routes (protected) */}
             <Route path="/moderator" element={<ModeratorLayout />}>
               <Route index element={<ModeratorDashboard />} />
-              <Route path="reports" element={<div>Reports Page - Coming Soon</div>} />
+              <Route path="reports" element={<ModeratorReports />} />
               <Route path="comments" element={<div>Comments Moderation - Coming Soon</div>} />
               <Route path="campaigns" element={<div>Campaign Reviews - Coming Soon</div>} />
             </Route>
