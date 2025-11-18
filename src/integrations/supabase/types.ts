@@ -485,6 +485,20 @@ export type Database = {
         }
         Returns: boolean
       }
+      send_email_notification: {
+        Args: {
+          p_campaign_title?: string
+          p_donation_amount?: number
+          p_notes?: string
+          p_recipient_email: string
+          p_recipient_name: string
+          p_type: string
+          p_update_content?: string
+          p_update_title?: string
+          p_withdrawal_amount?: number
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "campaign_creator" | "donor"
