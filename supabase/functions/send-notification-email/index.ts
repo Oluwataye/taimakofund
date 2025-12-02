@@ -10,7 +10,7 @@ const corsHeaders = {
 };
 
 interface EmailRequest {
-  type: "donation" | "campaign_update" | "withdrawal_approved" | "withdrawal_rejected";
+  type: "donation" | "campaign_update" | "withdrawal_approved" | "withdrawal_rejected" | "report_investigating" | "report_resolved" | "report_dismissed";
   recipientEmail: string;
   recipientName: string;
   data: {
@@ -20,6 +20,9 @@ interface EmailRequest {
     updateContent?: string;
     withdrawalAmount?: number;
     notes?: string;
+    reportType?: string;
+    reportReason?: string;
+    reportStatus?: string;
   };
 }
 
@@ -192,6 +195,128 @@ const handler = async (req: Request): Promise<Response> => {
                   <p>If you have questions or would like to resubmit your request, please contact our support team.</p>
                   <a href="${Deno.env.get("VITE_SUPABASE_URL")}/dashboard" class="button">View Dashboard</a>
                   <p style="margin-top: 30px;">Best regards,</p>
+                  <p><strong>TaimakoFund Team</strong></p>
+                </div>
+                <div class="footer">
+                  <p>© 2024 TaimakoFund. All rights reserved.</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `;
+        break;
+
+      case "report_investigating":
+        subject = "Your Report is Being Investigated";
+        html = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+                .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+                .info-box { background: white; padding: 15px; margin: 15px 0; border-radius: 6px; border-left: 4px solid #3b82f6; }
+                .footer { text-align: center; margin-top: 30px; color: #999; font-size: 12px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>🔍 Report Under Investigation</h1>
+                </div>
+                <div class="content">
+                  <p>Hello ${recipientName},</p>
+                  <p>We wanted to let you know that your report is now being actively investigated by our moderation team.</p>
+                  <div class="info-box">
+                    <p><strong>Report Type:</strong> ${data.reportType}</p>
+                    <p><strong>Your Reason:</strong> ${data.reportReason}</p>
+                  </div>
+                  <p>Our team takes all reports seriously and will take appropriate action based on our investigation findings.</p>
+                  <p style="margin-top: 30px;">Thank you for helping keep our community safe!</p>
+                  <p><strong>TaimakoFund Team</strong></p>
+                </div>
+                <div class="footer">
+                  <p>© 2024 TaimakoFund. All rights reserved.</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `;
+        break;
+
+      case "report_resolved":
+        subject = "Your Report Has Been Resolved";
+        html = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+                .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+                .info-box { background: white; padding: 15px; margin: 15px 0; border-radius: 6px; border-left: 4px solid #10b981; }
+                .footer { text-align: center; margin-top: 30px; color: #999; font-size: 12px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>✅ Report Resolved</h1>
+                </div>
+                <div class="content">
+                  <p>Hello ${recipientName},</p>
+                  <p>Good news! Your report has been reviewed and resolved by our moderation team.</p>
+                  <div class="info-box">
+                    <p><strong>Report Type:</strong> ${data.reportType}</p>
+                    <p><strong>Status:</strong> Resolved</p>
+                    ${data.notes ? `<p><strong>Resolution Notes:</strong> ${data.notes}</p>` : ""}
+                  </div>
+                  <p>Appropriate action has been taken based on our community guidelines. Thank you for your patience.</p>
+                  <p style="margin-top: 30px;">Thank you for helping keep our community safe!</p>
+                  <p><strong>TaimakoFund Team</strong></p>
+                </div>
+                <div class="footer">
+                  <p>© 2024 TaimakoFund. All rights reserved.</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `;
+        break;
+
+      case "report_dismissed":
+        subject = "Update on Your Report";
+        html = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+                .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+                .info-box { background: white; padding: 15px; margin: 15px 0; border-radius: 6px; border-left: 4px solid #6b7280; }
+                .footer { text-align: center; margin-top: 30px; color: #999; font-size: 12px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>Report Review Complete</h1>
+                </div>
+                <div class="content">
+                  <p>Hello ${recipientName},</p>
+                  <p>We have reviewed your report and after careful consideration, we found that the reported content does not violate our community guidelines.</p>
+                  <div class="info-box">
+                    <p><strong>Report Type:</strong> ${data.reportType}</p>
+                    <p><strong>Status:</strong> Dismissed</p>
+                    ${data.notes ? `<p><strong>Notes:</strong> ${data.notes}</p>` : ""}
+                  </div>
+                  <p>We understand this may not be the outcome you expected, but we appreciate you taking the time to report concerns.</p>
+                  <p style="margin-top: 30px;">Thank you for helping keep our community safe!</p>
                   <p><strong>TaimakoFund Team</strong></p>
                 </div>
                 <div class="footer">
