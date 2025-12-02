@@ -107,6 +107,42 @@ export default function Reports() {
 
       if (error) throw error;
 
+      // Send email notification to reporter
+      const report = selectedReport || reports.find(r => r.id === reportId);
+      if (report) {
+        // Get reporter email from auth
+        const { data: reporterData } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', report.reporter_id)
+          .single();
+
+        // Get reporter email via edge function or rpc
+        const emailType = newStatus === 'investigating' 
+          ? 'report_investigating' 
+          : newStatus === 'resolved' 
+          ? 'report_resolved' 
+          : 'report_dismissed';
+
+        try {
+          await supabase.functions.invoke('send-notification-email', {
+            body: {
+              type: emailType,
+              recipientEmail: '', // Will be fetched server-side
+              recipientName: reporterData?.full_name || 'User',
+              data: {
+                reportType: report.reported_type,
+                reportReason: report.reason,
+                notes: actionNotes || undefined,
+              },
+            },
+          });
+        } catch (emailError) {
+          console.error('Failed to send email notification:', emailError);
+          // Don't fail the main action if email fails
+        }
+      }
+
       toast({
         title: 'Success',
         description: `Report ${newStatus}`,
