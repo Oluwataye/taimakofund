@@ -22,8 +22,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Search, Eye, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Loader2, Search, Eye, CheckCircle, XCircle, Clock, ExternalLink } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { Link } from 'react-router-dom';
 
 interface Report {
   id: string;
@@ -86,6 +87,22 @@ export default function Reports() {
     }
   };
 
+  const logModerationAction = async (actionType: string, targetType: string, targetId: string, details?: Record<string, any>) => {
+    if (!user) return;
+    
+    try {
+      await supabase.from('moderation_logs').insert({
+        moderator_id: user.id,
+        action_type: actionType,
+        target_type: targetType,
+        target_id: targetId,
+        details: details || {},
+      });
+    } catch (error) {
+      console.error('Failed to log moderation action:', error);
+    }
+  };
+
   const handleStatusUpdate = async (reportId: string, newStatus: 'investigating' | 'resolved' | 'dismissed') => {
     if (!user) return;
 
@@ -107,17 +124,23 @@ export default function Reports() {
 
       if (error) throw error;
 
-      // Send email notification to reporter
+      // Log the moderation action
       const report = selectedReport || reports.find(r => r.id === reportId);
+      await logModerationAction(
+        `report_${newStatus}`,
+        'report',
+        reportId,
+        { notes: actionNotes, reportType: report?.reported_type }
+      );
+
+      // Send email notification to reporter
       if (report) {
-        // Get reporter email from auth
         const { data: reporterData } = await supabase
           .from('profiles')
           .select('full_name')
           .eq('id', report.reporter_id)
           .single();
 
-        // Get reporter email via edge function or rpc
         const emailType = newStatus === 'investigating' 
           ? 'report_investigating' 
           : newStatus === 'resolved' 
@@ -128,7 +151,7 @@ export default function Reports() {
           await supabase.functions.invoke('send-notification-email', {
             body: {
               type: emailType,
-              recipientEmail: '', // Will be fetched server-side
+              recipientEmail: '',
               recipientName: reporterData?.full_name || 'User',
               data: {
                 reportType: report.reported_type,
@@ -139,7 +162,6 @@ export default function Reports() {
           });
         } catch (emailError) {
           console.error('Failed to send email notification:', emailError);
-          // Don't fail the main action if email fails
         }
       }
 
@@ -160,6 +182,19 @@ export default function Reports() {
       });
     } finally {
       setProcessing(false);
+    }
+  };
+
+  const getReportedContentLink = (type: string, id: string) => {
+    switch (type) {
+      case 'campaign':
+        return `/public/campaign/${id}`;
+      case 'user':
+        return `/user/profile?id=${id}`;
+      case 'comment':
+        return null; // Comments don't have a direct page
+      default:
+        return null;
     }
   };
 
@@ -312,6 +347,32 @@ export default function Reports() {
                   <p className="text-sm text-muted-foreground">
                     {new Date(selectedReport.created_at).toLocaleDateString()}
                   </p>
+                </div>
+              </div>
+
+              {/* View Reported Content */}
+              <div>
+                <p className="text-sm font-medium mb-2">Reported Content</p>
+                <div className="p-3 bg-muted rounded-md">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm">
+                        <span className="font-medium">{selectedReport.reported_type.charAt(0).toUpperCase() + selectedReport.reported_type.slice(1)}</span>
+                        {' '}ID: <code className="text-xs bg-background px-1 py-0.5 rounded">{selectedReport.reported_id}</code>
+                      </p>
+                    </div>
+                    {getReportedContentLink(selectedReport.reported_type, selectedReport.reported_id) && (
+                      <Button variant="outline" size="sm" asChild>
+                        <Link 
+                          to={getReportedContentLink(selectedReport.reported_type, selectedReport.reported_id)!}
+                          target="_blank"
+                        >
+                          <ExternalLink className="mr-2 h-4 w-4" />
+                          View Content
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
 
