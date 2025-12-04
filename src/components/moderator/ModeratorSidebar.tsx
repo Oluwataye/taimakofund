@@ -3,7 +3,8 @@ import {
   Flag, 
   MessageSquare, 
   CheckCircle,
-  LogOut 
+  LogOut,
+  Activity
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSidebar } from '@/components/ui/sidebar';
@@ -24,6 +25,7 @@ const menuItems = [
   { title: 'Dashboard', url: '/moderator', icon: LayoutDashboard },
   { title: 'Reports', url: '/moderator/reports', icon: Flag },
   { title: 'Comments', url: '/moderator/comments', icon: MessageSquare },
+  { title: 'Activity Log', url: '/moderator/activity', icon: Activity },
   { title: 'Campaign Reviews', url: '/moderator/campaigns', icon: CheckCircle },
 ];
 
