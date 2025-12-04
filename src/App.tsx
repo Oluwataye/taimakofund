@@ -16,6 +16,7 @@ import { AdminLayout } from "./pages/admin/AdminLayout";
 import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import CampaignDetail from "./pages/CampaignDetail";
+import About from "./pages/About";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -57,7 +58,11 @@ const App = () => (
               <Route index element={<Index />} />
               <Route path="discover" element={<Discover />} />
               <Route path="campaign/:id" element={<CampaignDetail />} />
+              <Route path="about" element={<About />} />
             </Route>
+
+            {/* Standalone about route */}
+            <Route path="/about" element={<Navigate to="/public/about" replace />} />
 
             {/* User routes (protected) */}
             <Route 
